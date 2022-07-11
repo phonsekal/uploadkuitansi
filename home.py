@@ -5,7 +5,7 @@ from num2words import num2words
 from datetime import datetime
 from docx import Document
 from docxcompose.composer import Composer
-from PIL import Image
+#from PIL import Image
 import numpy as np
 from streamlit_lottie import st_lottie
 import json
@@ -57,7 +57,7 @@ footer:after{
     content:'Created by Artupas eD using Streamlit @ 2022';
     display:blok;
     position:relative;
-    color:SlateBlue;
+    color:#FECD45;
 }
 .css-79elbk.e1fqkh3o8 {
   margin: 0;
@@ -72,17 +72,42 @@ footer:after{
 .css-rytr0c {
     visibility:hidden;
 }
-.css-y3drt2.e1fqkh3o4:before {
-    font-family:Symbol;
-    content: "N";
+
+.css-1siy2j7.e1fqkh3o3 {
+    background-color:#e8f9fd;
 }
-# </style>
+.css-10trblm.e16nr0p30{
+    color:#2568FB;
+    font-family: averta_stdregular,Helvetica Neue,Helvetica;
+    font-size:2.15rem;
+}
+.css-znku1x.e16nr0p33 {
+color:#000c32;
+font-family: averta_stdregular,Helvetica Neue,Helvetica;
+}
+.css-183lzff.eyqtai90{
+color:#3AB0FF;
+font-family: averta_stdregular,Helvetica Neue,Helvetica;
+font-size:1.75rem;
+}
+.css-znku1x.p {
+    text-align: justify;
+}
+ </style>
 
 
 """, unsafe_allow_html=True )
 with st.sidebar:
     selected = option_menu("Pilih Menu", ["Home", 'Kuitansi Monev', 'Kuitansi Kegiatan', 'Kuitansi Translok'], 
-        icons=['house-fill', 'wallet-fill', 'currency-exchange', 'arrow-right-square-fill'], default_index=0)
+        icons=['house-fill', 'wallet-fill', 'currency-exchange', 'arrow-right-square-fill'], 
+        menu_icon="app-indicator", default_index=0,
+        styles={
+        "container": {"padding": "5!important", "background-color": "#f0f2f6"},
+        "icon": {"color": "#FECD45", "font-size": "28px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#2568FB"},
+    }
+        )
 
 if selected == "Home":
     st.write("""
@@ -91,7 +116,7 @@ if selected == "Home":
     with col5:
         st.write(
             """
-            # ./Welcome
+            # Selamat Datang
             """
         )
     with col4:
@@ -101,75 +126,55 @@ if selected == "Home":
             speed=1,
             reverse=False,
             loop=True,
-            quality="high",
+            quality="low",
             height="50%",
             width="50%",
         )
 
     st.write("""
         Selamat datang di tampilan muka aplikasi Kuitansi! :wave:
-        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](http://dedesaputra.com)
+        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Nominatif](https://drive.google.com/drive/folders/1dAb_hMT04oq6pWGPMMoyiE3QxFffYqQ8?usp=sharing)
         """
     )
-    st.warning(
+    st.info(
         """
         ✏️ **NOTE:** Aplikasi masih dalam tahap pengembangan, jika terdapat error pada aplikasi bisa menghubungi kami!
         """
     )
+
     st.markdown("***")
+
+    st.text(""" Peraturan tentang perjalanan dinas.
+
+            """)
+
+    st.write("""
+        **Peraturan Menteri Keuangan (PMK) Nomor 113/PMK.05/2012**  
+        Peraturan Menteri ini mengatur mengenai pelaksanaan dan pertanggungjawaban Perjalanan Dinas bagi Pejabat Negara, Pegawai Negeri, dan Pegawai Tidak Tetap yang dibebankan pada Anggaran Pendapatan dan Belanja Negara... [Selengkapnya](https://jdih.kemenkeu.go.id/fulltext/2012/113~PMK.05~2012PerLamp.pdf)
+    """)
+    st.write("""
+    **Peraturan Menteri Keuangan (PMK) Nomor 60/PMK.02/2021**  
+    Peraturan Menteri ini mengatur mengenai Standar Biaya Masukan (SBM) tahun 2022. SBM 2022 Standar Biaya Masukan Tahun Anggaran 2022 adalah satuan biaya berupa harga satuan, tarif, dan indeks yang ditetapkan untuk menghasilkan biaya komponen keluaran dalam penyusunan rencana kerja dan anggaran
+kementerian negara/lembaga Tahun Anggaran 2022... [Selengkapnya](https://jdih.kemenkeu.go.id/download/a73998d2-c308-4451-a907-35438a028e80/60~PMK.02~2021Per.pdf)
+    """)
+    st.write("""
+        **Peraturan Menteri Keuangan (PMK) Nomor 190/PMK.05/2012**  
+        Peraturan Menteri ini mengatur mengenai tata cara pembayaran dalam rangka pelaksanaan APBN selain tata cara pembayaran dalam rangka pelaksanaan APBN untuk Perwakilan Republik Indonesia di Luar Negeri dan Kementerian Pertahanan dan Tentara Nasional Indonesia... [Selengkapnya](https://peraturan.bpk.go.id/Home/Download/118021/2012%20PMK%20190.pdf)
+    """)
+    st.write("""
+        **Peraturan Direktur Jenderal Perbendaharaan Nomor PER-22/PB/2013**  
+        Peraturan Menteri ini mengatur tentang Ketentuan Lebih Lanjut Pelaksanaan Perjalanan Dinas Dalam Negeri Bagi Pejabat Negara, Pegawai Negeri, dan Pegawai Tidak Tetap... [Selengkapnya](https://www.dropbox.com/s/t7lcwms3idiqptx/per_22_pb_2013.pdf?dl=0)
+    """)
     col1, col2, col3 = st.columns(3)
     with col1 :
-        lottie_gambar = load_lottiefile("pages/templates/d.json")
-        st_lottie(
-            lottie_gambar,
-            speed=1,
-            reverse=False,
-            loop=True,
-            quality="high",
-            height="40%",
-            width="40%",
-            key="1",
-        )
+        ""
     with col2 :
         ""
     with col3:
         ""
 #st.markdown("***")
 if selected == "Kuitansi Monev":
-    st.markdown("""
-    <style>
-    #MainMenu {
-        visibility:hidden;
-    }
-    .css-1q1n0ol.egzxvld0 {
-        visibility:hidden;
-    }
-    footer:after{
-        visibility:visible;
-        content:'Created by Artupas eD using Streamlit @ 2022';
-        display:blok;
-        position:relative;
-        color:Tomato;
-    }
-    .css-10trblm.e16nr0p30 {
-        color:Tomato;
-        font-family:'Brush Script MT',cursive;
-    }
-    .css-znku1x.e16nr0p33{
-        font-family:garamond,serif;
-
-    }
-    .css-qrbaxs.effi0qh3{
-        font-family:helvetica,sans-serif;
-        color:#483248;
-        font-weight: bold;
-        font-size: small;
-
-    }
-
-    </style>
-
-    """, unsafe_allow_html=True )
+    
 
 
     st.write("""
@@ -188,17 +193,17 @@ if selected == "Kuitansi Monev":
             speed=1,
             reverse=False,
             loop=True,
-            quality="high",
+            quality="low",
             height="54%",
             width="54%",
         )
 
     st.write("""
-        Selamat datang di tampilan muka aplikasi Kuitansi! :wave:
-        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](http://dedesaputra.com)
+        Selamat datang! :wave:
+        Silahkan unduh format nominatif berikut, pastikan untuk tidak mengganti nama Sheet dan menghapus Column dan Row. ==> [Format Nominatif](https://docs.google.com/spreadsheets/d/1mtL9Te8LX9GDx-xLIi3VoqMKFwlYyjZo/edit?usp=sharing&ouid=104787015191488665272&rtpof=true&sd=true)
         """
     )
-    st.warning(
+    st.info(
         """
         ✏️ **NOTE:** Gunakan format nominatif yang sudah disiapkan!
         """
@@ -213,138 +218,108 @@ if selected == "Kuitansi Monev":
         excelfile = st.file_uploader("Unggah file nominatif")
         submit = st.form_submit_button("Proses")
     if submit:
-        df1 = pd.read_excel(excelfile, sheet_name="kuitansi")
-        df2 = pd.read_excel(excelfile, sheet_name="kuitansi2")
-        mak = (df2['MAK'][0])
-        output = (df2['Output'][0])
-        sub_output = (df2['Sub Output'][0])
-        akun = (df2['Akun'][0])
-        kegiatan = (df2['Nama Kegiatan'][0])
-        layanan = df2['Layanan'][0] 
-        tempat = df2['UPT Tujuan'][0]
-        tanggal = bulan_indo(df2['tgl_pergi_pulang'][0])
-        nomor_st = df2['no_st'][0]
-        tanggal_st = kalender_indo(df2['tgl_st'][0])
-        bulan = bulan_indo(df2['bulan'][0])
-        tgl_berangkat = kalender_indo(df2['Tgl Berangkat'][0])
-        tgl_pulang = kalender_indo(df2['Tgl Pulang'][0])
-        for r_idx, r_val in df1.iterrows():
-            if (r_val['Kota Tujuan'] == 'Banten'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Serang'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Bogor'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Bandung'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Bekasi'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Jawa Barat'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            elif (r_val['Kota Tujuan'] == 'Tangerang'):
-                doctemp = f"pages/templates/monevdekat.docx"
-            else:
-                doctemp = f"pages/templates/monevjauh.docx"
-            doc = DocxTemplate(doctemp)
-            context = {
-                "mak" : mak,
-                "total" : rupiah_strip(r_val['Tiket'] + r_val['Taksi Asal'] + r_val['Taksi Tujuan'] + r_val['Total Uang Harian'] + r_val['Total Hotel']),
-                "output" : output,
-                "sub_output" : sub_output,
-                "akun" : akun,
-                "kegiatan" : kegiatan,
-                "layanan" : layanan,
-                "tempat" : tempat,
-                "tanggal" : tanggal,
-                "nomor_st" : nomor_st,
-                "tanggal_st" : tanggal_st,
-                "asal" : r_val['Kota Asal'],
-                "tujuan" : r_val['Kota Tujuan'],
-                "asal_tujuan" : r_val['Kota Asal'] + "--" + r_val['Kota Tujuan'],
-                "terbilang" : num2words(int(r_val['Tiket'] + r_val['Taksi Asal'] + r_val['Taksi Tujuan'] + r_val['Total Uang Harian']) + r_val['Total Hotel'], lang='id').title() + " Rupiah",
-                "nama" : r_val['Nama'],
-                "nip" : r_val['NIP'],
-                "jabatan" : r_val['Jabatan'],
-                "tiket" : rupiah_strip(r_val['Tiket']),
-                "taksi_jakarta" : rupiah_strip(r_val['Taksi Asal']),
-                "taksi_daerah" : rupiah_strip(r_val['Taksi Tujuan']),
-                "hari" : r_val['Lama Perjadin'],
-                "hari_rp" : rupiah_strip(r_val['Total Uang Harian'] / r_val['Lama Perjadin']),
-                "total_hari" : rupiah_strip(r_val['Total Uang Harian']),
-                "malam" : int(r_val['Lama Perjadin']) - 1,
-                "malam_rp" : rupiah_strip(r_val['Total Hotel'] / (r_val['Lama Perjadin'] - 1)),
-                "total_malam" : rupiah_strip(r_val['Total Hotel']),
-                "bulan" : bulan,
-                "total_spd" : rupiah_strip(r_val['Taksi Asal'] + r_val['Taksi Tujuan']),
-                "hari_ter" : num2words(int(r_val['Lama Perjadin']), lang="id"),
-                "pangkat" :r_val['Pangkat/Gol'],
-                "tgl_berangkat" : tgl_berangkat,
-                "tgl_pulang" : tgl_pulang,
-                }
-            doc.render(context)
-            output_path = f"pages/OUTPUT/{context['nama']}.docx"
-            doc.save(output_path)
-        a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
-        b = st.success("")
-        with b:
-            np_array = df1["Nama"].to_numpy()
-            #st.write(np_array)
+        try:
+            df1 = pd.read_excel(excelfile, skiprows=1, sheet_name="kuitansi")
+            df2 = pd.read_excel(excelfile, sheet_name="kuitansi2")
+            mak = (df2['MAK'][0])
+            output = (df2['Output'][0])
+            sub_output = (df2['Sub Output'][0])
+            akun = (df2['Akun'][0])
+            kegiatan = (df2['Nama Kegiatan'][0])
+            layanan = df2['Layanan'][0] 
+            tempat = df2['UPT Tujuan'][0]
+            tanggal = bulan_indo(df2['tgl_pergi_pulang'][0])
+            nomor_st = df2['no_st'][0]
+            tanggal_st = kalender_indo(df2['tgl_st'][0])
+            bulan = bulan_indo(df2['bulan'][0])
+            tgl_berangkat = kalender_indo(df2['Tgl Berangkat'][0])
+            tgl_pulang = kalender_indo(df2['Tgl Pulang'][0])
+            for r_idx, r_val in df1.iterrows():
+                if (r_val['Kota Tujuan'] == 'Banten'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Serang'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Bogor'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Bandung'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Bekasi'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Jawa Barat'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                elif (r_val['Kota Tujuan'] == 'Tangerang'):
+                    doctemp = f"pages/templates/monevdekat.docx"
+                else:
+                    doctemp = f"pages/templates/monevjauh.docx"
+                doc = DocxTemplate(doctemp)
+                context = {
+                    "mak" : mak,
+                    "total" : rupiah_strip(r_val['Tiket'] + r_val['Taksi Asal'] + r_val['Taksi Tujuan'] + r_val['Total Uang Harian'] + r_val['Total Hotel']),
+                    "output" : output,
+                    "sub_output" : sub_output,
+                    "akun" : akun,
+                    "kegiatan" : kegiatan,
+                    "layanan" : layanan,
+                    "tempat" : tempat,
+                    "tanggal" : tanggal,
+                    "nomor_st" : nomor_st,
+                    "tanggal_st" : tanggal_st,
+                    "asal" : r_val['Kota Asal'],
+                    "tujuan" : r_val['Kota Tujuan'],
+                    "asal_tujuan" : r_val['Kota Asal'] + "--" + r_val['Kota Tujuan'],
+                    "terbilang" : num2words(int(r_val['Tiket'] + r_val['Taksi Asal'] + r_val['Taksi Tujuan'] + r_val['Total Uang Harian']) + r_val['Total Hotel'], lang='id').title() + " Rupiah",
+                    "nama" : r_val['Nama'],
+                    "nip" : r_val['NIP'],
+                    "jabatan" : r_val['Jabatan'],
+                    "tiket" : rupiah_strip(r_val['Tiket']),
+                    "taksi_jakarta" : rupiah_strip(r_val['Taksi Asal']),
+                    "taksi_daerah" : rupiah_strip(r_val['Taksi Tujuan']),
+                    "hari" : r_val['Lama Perjadin'],
+                    "hari_rp" : rupiah_strip(r_val['Total Uang Harian'] / r_val['Lama Perjadin']),
+                    "total_hari" : rupiah_strip(r_val['Total Uang Harian']),
+                    "malam" : int(r_val['Lama Perjadin']) - 1,
+                    "malam_rp" : rupiah_strip(r_val['Total Hotel'] / (r_val['Lama Perjadin'] - 1)),
+                    "total_malam" : rupiah_strip(r_val['Total Hotel']),
+                    "bulan" : bulan,
+                    "total_spd" : rupiah_strip(r_val['Taksi Asal'] + r_val['Taksi Tujuan']),
+                    "hari_ter" : num2words(int(r_val['Lama Perjadin']), lang="id"),
+                    "pangkat" :r_val['Pangkat/Gol'],
+                    "tgl_berangkat" : tgl_berangkat,
+                    "tgl_pulang" : tgl_pulang,
+                    }
+                doc.render(context)
+                output_path = f"pages/OUTPUT/{context['nama']}.docx"
+                doc.save(output_path)
+            a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
+            b = st.success("")
+            with b:
+                np_array = df1["Nama"].to_numpy()
+                #st.write(np_array)
 
-            files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
-            composed = f"pages/gabung.docx"
-            result = Document(files2[0])
-            result.add_page_break()
-            composer = Composer(result)
-            for i in range(1, len(files2)):
-                doc2 = Document(files2[i])
-                if i != len(files2) -1:
-                    doc2.add_page_break()
-                composer.append(doc2)
-            composer.save(composed)
-            with open(composed, "rb") as file:
-                st.success("🎉 File kuitansi telah selesai dibuat")
-                st.download_button(
-                    label = "⬇️ Download File",
-                    data=file,
-                    file_name="kuitansi.docx",
-                    mime="application/octet-stream",
-                    key="10000009"
-                )
+                files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
+                composed = f"pages/gabung.docx"
+                result = Document(files2[0])
+                result.add_page_break()
+                composer = Composer(result)
+                for i in range(1, len(files2)):
+                    doc2 = Document(files2[i])
+                    if i != len(files2) -1:
+                        doc2.add_page_break()
+                    composer.append(doc2)
+                composer.save(composed)
+                with open(composed, "rb") as file:
+                    st.success("🎉 File kuitansi telah selesai dibuat")
+                    st.download_button(
+                        label = "⬇️ Download File",
+                        data=file,
+                        file_name="kuitansi.docx",
+                        mime="application/octet-stream",
+                        key="10000009"
+                    )
+        except:
+            st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan")
 if selected == 'Kuitansi Translok':
-    st.markdown("""
-    <style>
-    #MainMenu {
-        visibility:hidden;
-    }
-    .css-1q1n0ol.egzxvld0 {
-        visibility:hidden;
-    }
-    footer:after{
-        visibility:visible;
-        content:'Created by Artupas eD using Streamlit @ 2022';
-        display:blok;
-        position:relative;
-        color:Tomato;
-    }
-    .css-10trblm.e16nr0p30 {
-        color:Tomato;
-        font-family:'Brush Script MT',cursive;
-    }
-    .css-znku1x.e16nr0p33{
-        font-family:garamond,serif;
-
-    }
-    .css-qrbaxs.effi0qh3{
-        font-family:helvetica,sans-serif;
-        color:#483248;
-        font-weight: bold;
-        font-size: small;
-
-    }
-
-    </style>
-
-    """, unsafe_allow_html=True )
+    
 
 
     st.write("""
@@ -363,17 +338,17 @@ if selected == 'Kuitansi Translok':
             speed=1,
             reverse=False,
             loop=True,
-            quality="high",
+            quality="low",
             height="54%",
             width="54%",
         )
 
     st.write("""
-        Selamat datang di tampilan muka aplikasi Kuitansi! :wave:
-        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](http://dedesaputra.com)
+        Selamat datang! :wave:
+        Untuk menggunakan aplikasi ini, silahkan isi form berikut. Pastikan kolom nominal hanya diisi menggunakan angka.
         """
     )
-    st.warning(
+    st.info(
         """
         ✏️ **NOTE:** Silahkan isi form di bawah ini!
         """
@@ -393,78 +368,48 @@ if selected == 'Kuitansi Translok':
         tgl = tanggal.strftime("%d %B %Y")
         tgl2 = tgl.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
     if submit:
-        thousands_separator = "."
-        fractional_separator = ","
-        currency = rupiah_strip(nilai)
-        doc = DocxTemplate("pages/templates/kuitansiperjadinapp.docx")
-        context = {
-            "nama": nama,
-            "nip": nip,
-            "mak": mak,
-            "kegiatan": kegiatan,
-            "lokasi": lokasi,
-            "tanggal": tgl2,
-            "layanan": layanan,
-            "terbilang": num2words(int(nilai), lang='id').title() + " Rupiah",
-            "uang": currency
-        }
-        #st.write(context)
-        output_name = f'download/{context["nama"]}.docx'
-        doc.render(context)   
-        doc.save(output_name)
-        #convert(output_name, "hasil.pdf")
-        with open(output_name, "rb") as file:
-        #    btn = st.download_button(
-         #           label="Download PDF",
-          #          data=file,
-           #         file_name="hasil.pdf",
-            #        mime="application/octet-stream"
-             #   )
-            st.success("🎉 File kuitansi telah selesai dibuat")
-            # st.write(html, unsafe_allow_html=True)
-            # st.write("")
-            st.download_button(
-                "⬇️ Download File",
-                data=file,
-                file_name="Hasil.docx",
-                mime="application/octet-stream",
-            )
+        try:
+            thousands_separator = "."
+            fractional_separator = ","
+            currency = rupiah_strip(nilai)
+            doc = DocxTemplate("pages/templates/kuitansiperjadinapp.docx")
+            context = {
+                "nama": nama,
+                "nip": nip,
+                "mak": mak,
+                "kegiatan": kegiatan,
+                "lokasi": lokasi,
+                "tanggal": tgl2,
+                "layanan": layanan,
+                "terbilang": num2words(int(nilai), lang='id').title() + " Rupiah",
+                "uang": currency
+            }
+            #st.write(context)
+            output_name = f'download/{context["nama"]}.docx'
+            doc.render(context)   
+            doc.save(output_name)
+            #convert(output_name, "hasil.pdf")
+            with open(output_name, "rb") as file:
+            #    btn = st.download_button(
+            #           label="Download PDF",
+            #          data=file,
+            #         file_name="hasil.pdf",
+                #        mime="application/octet-stream"
+                #   )
+                st.success("🎉 File kuitansi telah selesai dibuat")
+                # st.write(html, unsafe_allow_html=True)
+                # st.write("")
+                st.download_button(
+                    "⬇️ Download File",
+                    data=file,
+                    file_name="Hasil.docx",
+                    mime="application/octet-stream",
+                )
+        except:
+            st.error("Silahkan isi form terlebih dahulu, kolom nominal hanya boleh diisi angka")
 
 if selected == 'Kuitansi Kegiatan':
-    st.markdown("""
-    <style>
-    #MainMenu {
-        visibility:hidden;
-    }
-    .css-1q1n0ol.egzxvld0 {
-        visibility:hidden;
-    }
-    footer:after{
-        visibility:visible;
-        content:'Created by Artupas eD using Streamlit @ 2022';
-        display:blok;
-        position:relative;
-        color:Tomato;
-    }
-    .css-10trblm.e16nr0p30 {
-        color:Tomato;
-        font-family:'Brush Script MT',cursive;
-    }
-    .css-znku1x.e16nr0p33{
-        font-family:garamond,serif;
-
-    }
-    .css-qrbaxs.effi0qh3{
-        font-family:helvetica,sans-serif;
-        color:#483248;
-        font-weight: bold;
-        font-size: small;
-
-    }
-
-    </style>
-
-    """, unsafe_allow_html=True )
+    
 
 
     st.write("""
@@ -483,7 +428,7 @@ if selected == 'Kuitansi Kegiatan':
             speed=1,
             reverse=False,
             loop=True,
-            quality="high",
+            quality="low",
             height="70%",
             width="70%",
         )
@@ -493,7 +438,7 @@ if selected == 'Kuitansi Kegiatan':
         Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](http://dedesaputra.com)
         """
     )
-    st.warning(
+    st.info(
         """
         ✏️ **NOTE:** Silahkan pilih PPK terlebih dahulu!
         """
@@ -508,82 +453,85 @@ if selected == 'Kuitansi Kegiatan':
             excelfile = st.file_uploader("Unggah file nominatif")
             submit = st.form_submit_button("Proses")
         if submit:
-            df2 = pd.read_excel(excelfile, sheet_name="kerja")
-            for r_idx, r_val in df2.iterrows():
-                if (r_val['asal'] == 'Jakarta'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
-                elif (r_val['asal'] == 'Bogor'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
-                elif (r_val['asal'] == 'Banten'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
-                elif (r_val['asal'] == 'Bandung'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
-                elif (r_val['asal'] == 'Serang'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
-                else:
-                    doctemp = f"pages/templates/daerahkuitansikegiatan.docx"
+            try:
+                df2 = pd.read_excel(excelfile, sheet_name="kerja")
+                for r_idx, r_val in df2.iterrows():
+                    if (r_val['asal'] == 'Jakarta'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
+                    elif (r_val['asal'] == 'Bogor'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
+                    elif (r_val['asal'] == 'Banten'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
+                    elif (r_val['asal'] == 'Bandung'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
+                    elif (r_val['asal'] == 'Serang'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
+                    else:
+                        doctemp = f"pages/templates/daerahkuitansikegiatan.docx"
 
-                doc = DocxTemplate(doctemp)
-                context = {
-                    'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
-                    'output' : r_val['output'],
-                    'sub_output' : r_val['sub_output'],
-                    'akun' : r_val['akun'],
-                    'kegiatan' : r_val['kegiatan'],
-                    'layanan' : r_val['layanan'],
-                    'tempat' : r_val['tempat'],
-                    'tanggal' : bulan_indo(r_val['tanggal']),
-                    'nomor_st' : r_val['nomor_st'],
-                    'tanggal_st' : kalender_indo(r_val['tanggal_st']),
-                    'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
-                    'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
-                    #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
-                    'nama' : r_val['nama'],
-                    'nip' : r_val['nip'],
-                    'tiket' : rupiah_strip(r_val['tiket']),
-                    'taksi_jakarta' : rupiah_strip(r_val['taksi_jakarta']),
-                    'taksi_daerah' : rupiah_strip(r_val['taksi_daerah']),
-                    'hari' : str(r_val['hari']),
-                    'hari_rp' : rupiah_strip(float(r_val['total_hari'] / r_val['hari'])),
-                    'total_hari' : rupiah_strip(r_val['total_hari']),
-                    'lokasi' : r_val["lokasi"],
-                    'bulan' : kalender_indo(r_val['tanggal_akhir']),
-                    'jabatan' : r_val['jabatan'],
-                    'dpr_jakarta' : rupiah_strip(r_val['dpr_jakarta']),
-                    'dpr_daerah' : rupiah_strip(r_val['dpr_daerah']),
-                    'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
-                    'mak' : r_val['mak'],                        
-                    }
-                #st.write(context)
-                doc.render(context)
-                output_path = f"pages/OUTPUT/{context['nama']}.docx"
-                doc.save(output_path)
-            a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
-            b = st.success("")
-            with b:
-                np_array = df2["nama"].to_numpy()
-                #st.write(np_array)
+                    doc = DocxTemplate(doctemp)
+                    context = {
+                        'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
+                        'output' : r_val['output'],
+                        'sub_output' : r_val['sub_output'],
+                        'akun' : r_val['akun'],
+                        'kegiatan' : r_val['kegiatan'],
+                        'layanan' : r_val['layanan'],
+                        'tempat' : r_val['tempat'],
+                        'tanggal' : bulan_indo(r_val['tanggal']),
+                        'nomor_st' : r_val['nomor_st'],
+                        'tanggal_st' : kalender_indo(r_val['tanggal_st']),
+                        'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
+                        'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
+                        #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
+                        'nama' : r_val['nama'],
+                        'nip' : r_val['nip'],
+                        'tiket' : rupiah_strip(r_val['tiket']),
+                        'taksi_jakarta' : rupiah_strip(r_val['taksi_jakarta']),
+                        'taksi_daerah' : rupiah_strip(r_val['taksi_daerah']),
+                        'hari' : str(r_val['hari']),
+                        'hari_rp' : rupiah_strip(float(r_val['total_hari'] / r_val['hari'])),
+                        'total_hari' : rupiah_strip(r_val['total_hari']),
+                        'lokasi' : r_val["lokasi"],
+                        'bulan' : kalender_indo(r_val['tanggal_akhir']),
+                        'jabatan' : r_val['jabatan'],
+                        'dpr_jakarta' : rupiah_strip(r_val['dpr_jakarta']),
+                        'dpr_daerah' : rupiah_strip(r_val['dpr_daerah']),
+                        'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
+                        'mak' : r_val['mak'],                        
+                        }
+                    #st.write(context)
+                    doc.render(context)
+                    output_path = f"pages/OUTPUT/{context['nama']}.docx"
+                    doc.save(output_path)
+                a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
+                b = st.success("")
+                with b:
+                    np_array = df2["nama"].to_numpy()
+                    #st.write(np_array)
 
-                files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
-                composed = f"pages/gabung.docx"
-                result = Document(files2[0])
-                result.add_page_break()
-                composer = Composer(result)
-                for i in range(1, len(files2)):
-                    doc2 = Document(files2[i])
-                    if i != len(files2) -1:
-                        doc2.add_page_break()
-                    composer.append(doc2)
-                composer.save(composed)
-                with open(composed, "rb") as file:
-                    st.success("🎉 File kuitansi telah selesai dibuat")
-                    st.download_button(
-                        label = "⬇️ Download File",
-                        data=file,
-                        file_name="kuitansi.docx",
-                        mime="application/octet-stream",
-                        key="10000009"
-                    )
+                    files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
+                    composed = f"pages/gabung.docx"
+                    result = Document(files2[0])
+                    result.add_page_break()
+                    composer = Composer(result)
+                    for i in range(1, len(files2)):
+                        doc2 = Document(files2[i])
+                        if i != len(files2) -1:
+                            doc2.add_page_break()
+                        composer.append(doc2)
+                    composer.save(composed)
+                    with open(composed, "rb") as file:
+                        st.success("🎉 File kuitansi telah selesai dibuat")
+                        st.download_button(
+                            label = "⬇️ Download File",
+                            data=file,
+                            file_name="kuitansi.docx",
+                            mime="application/octet-stream",
+                            key="10000009"
+                        )
+            except:
+                st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan ") 
             
     if ppk == 'PPK 01 (Akik Takjudin)':
         form = st.form("Upload file")
@@ -591,83 +539,86 @@ if selected == 'Kuitansi Kegiatan':
             excelfile = st.file_uploader("Unggah file nominatif")
             submit = st.form_submit_button("Proses")
         if submit:
-            df2 = pd.read_excel(excelfile, sheet_name="kerja")
-            for r_idx, r_val in df2.iterrows():
-                if (r_val['asal'] == 'Jakarta'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
-                elif (r_val['asal'] == 'Bogor'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
-                elif (r_val['asal'] == 'Banten'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
-                elif (r_val['asal'] == 'Bandung'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
-                elif (r_val['asal'] == 'Serang'):
-                    doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
-                else:
-                    doctemp = f"pages/templates/daerahkuitansikegiatanppk.docx"
+            try:
+                df2 = pd.read_excel(excelfile, sheet_name="kerja")
+                for r_idx, r_val in df2.iterrows():
+                    if (r_val['asal'] == 'Jakarta'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
+                    elif (r_val['asal'] == 'Bogor'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
+                    elif (r_val['asal'] == 'Banten'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
+                    elif (r_val['asal'] == 'Bandung'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
+                    elif (r_val['asal'] == 'Serang'):
+                        doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
+                    else:
+                        doctemp = f"pages/templates/daerahkuitansikegiatanppk.docx"
 
-                doc = DocxTemplate(doctemp)
-                context = {
-                    'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
-                    'output' : r_val['output'],
-                    'sub_output' : r_val['sub_output'],
-                    'akun' : r_val['akun'],
-                    'kegiatan' : r_val['kegiatan'],
-                    'layanan' : r_val['layanan'],
-                    'tempat' : r_val['tempat'],
-                    'tanggal' : bulan_indo(r_val['tanggal']),
-                    'nomor_st' : r_val['nomor_st'],
-                    'tanggal_st' : kalender_indo(r_val['tanggal_st']),
-                    'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
-                    'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
-                    #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
-                    'nama' : r_val['nama'],
-                    'nip' : r_val['nip'],
-                    'tiket' : rupiah_strip(r_val['tiket']),
-                    'taksi_jakarta' : rupiah_strip(r_val['taksi_jakarta']),
-                    'taksi_daerah' : rupiah_strip(r_val['taksi_daerah']),
-                    'hari' : str(r_val['hari']),
-                    'hari_rp' : rupiah_strip(float(r_val['total_hari'] / r_val['hari'])),
-                    'total_hari' : rupiah_strip(r_val['total_hari']),
-                    'lokasi' : r_val["lokasi"],
-                    'bulan' : kalender_indo(r_val['tanggal_akhir']),
-                    'jabatan' : r_val['jabatan'],
-                    'dpr_jakarta' : rupiah_strip(r_val['dpr_jakarta']),
-                    'dpr_daerah' : rupiah_strip(r_val['dpr_daerah']),
-                    'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
-                    'mak' : r_val['mak'],                        
-                    }
-                #st.write(context)
-                doc.render(context)
-                output_path = f"pages/OUTPUT/{context['nama']}.docx"
-                doc.save(output_path)
-            a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
-            b = st.success("")
-            with b:
-                np_array = df2["nama"].to_numpy()
-                #st.write(np_array)
+                    doc = DocxTemplate(doctemp)
+                    context = {
+                        'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
+                        'output' : r_val['output'],
+                        'sub_output' : r_val['sub_output'],
+                        'akun' : r_val['akun'],
+                        'kegiatan' : r_val['kegiatan'],
+                        'layanan' : r_val['layanan'],
+                        'tempat' : r_val['tempat'],
+                        'tanggal' : bulan_indo(r_val['tanggal']),
+                        'nomor_st' : r_val['nomor_st'],
+                        'tanggal_st' : kalender_indo(r_val['tanggal_st']),
+                        'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
+                        'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
+                        #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
+                        'nama' : r_val['nama'],
+                        'nip' : r_val['nip'],
+                        'tiket' : rupiah_strip(r_val['tiket']),
+                        'taksi_jakarta' : rupiah_strip(r_val['taksi_jakarta']),
+                        'taksi_daerah' : rupiah_strip(r_val['taksi_daerah']),
+                        'hari' : str(r_val['hari']),
+                        'hari_rp' : rupiah_strip(float(r_val['total_hari'] / r_val['hari'])),
+                        'total_hari' : rupiah_strip(r_val['total_hari']),
+                        'lokasi' : r_val["lokasi"],
+                        'bulan' : kalender_indo(r_val['tanggal_akhir']),
+                        'jabatan' : r_val['jabatan'],
+                        'dpr_jakarta' : rupiah_strip(r_val['dpr_jakarta']),
+                        'dpr_daerah' : rupiah_strip(r_val['dpr_daerah']),
+                        'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
+                        'mak' : r_val['mak'],                        
+                        }
+                    #st.write(context)
+                    doc.render(context)
+                    output_path = f"pages/OUTPUT/{context['nama']}.docx"
+                    doc.save(output_path)
+                a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
+                b = st.success("")
+                with b:
+                    np_array = df2["nama"].to_numpy()
+                    #st.write(np_array)
 
-                files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
-                composed = f"pages/gabung.docx"
-                result = Document(files2[0])
-                result.add_page_break()
-                composer = Composer(result)
-                for i in range(1, len(files2)):
-                    doc2 = Document(files2[i])
-                    if i != len(files2) -1:
-                        doc2.add_page_break()
-                    composer.append(doc2)
-                composer.save(composed)
-                with open(composed, "rb") as file:
-                    st.success("🎉 File kuitansi telah selesai dibuat")
-                    st.download_button(
-                        label = "⬇️ Download File",
-                        data=file,
-                        file_name="kuitansi.docx",
-                        mime="application/octet-stream",
-                        key="10000009"
-                    )
-            
+                    files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
+                    composed = f"pages/gabung.docx"
+                    result = Document(files2[0])
+                    result.add_page_break()
+                    composer = Composer(result)
+                    for i in range(1, len(files2)):
+                        doc2 = Document(files2[i])
+                        if i != len(files2) -1:
+                            doc2.add_page_break()
+                        composer.append(doc2)
+                    composer.save(composed)
+                    with open(composed, "rb") as file:
+                        st.success("🎉 File kuitansi telah selesai dibuat")
+                        st.download_button(
+                            label = "⬇️ Download File",
+                            data=file,
+                            file_name="kuitansi.docx",
+                            mime="application/octet-stream",
+                            key="10000009"
+                        )
+            except:
+                st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan")
+                
   
 
        
