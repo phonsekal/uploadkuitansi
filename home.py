@@ -435,7 +435,7 @@ if selected == 'Kuitansi Kegiatan':
 
     st.write("""
         Selamat datang di tampilan muka aplikasi Kuitansi! :wave:
-        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](http://dedesaputra.com)
+        Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](https://drive.google.com/drive/folders/1dAb_hMT04oq6pWGPMMoyiE3QxFffYqQ8?usp=sharing)
         """
     )
     st.info(
