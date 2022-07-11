@@ -34,11 +34,11 @@ def transform_to_rupiah_format(value):
         else:
             temp_reverse_value = temp_reverse_value + val
     temp_result = temp_reverse_value[::-1]
-    return "Rp" + temp_result + ",-" 
+    return "Rp" + temp_result + ",00" 
 
 def rupiah_strip(value):
     a = str(transform_to_rupiah_format(float(value)))
-    ubah = a.replace("Rp0,-", "Rp-")
+    ubah = a.replace("Rp0,00", "-")
     return ubah
         
 def load_lottiefile(filepath: str):
@@ -438,7 +438,7 @@ if selected == 'Kuitansi Kegiatan':
         Untuk menggunakan aplikasi ini, silahkan download format nominatif pada link yang telah disediakan ==> [Format Kuitansi](https://drive.google.com/drive/folders/1dAb_hMT04oq6pWGPMMoyiE3QxFffYqQ8?usp=sharing)
         """
     )
-    st.info(
+    st.error(
         """
         ✏️ **NOTE:** Silahkan pilih PPK terlebih dahulu!
         """
