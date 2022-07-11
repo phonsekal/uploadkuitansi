@@ -200,7 +200,7 @@ if selected == "Kuitansi Monev":
 
     st.write("""
         Selamat datang! :wave:
-        Silahkan unduh format nominatif berikut, pastikan untuk tidak mengganti nama Sheet dan menghapus Column dan Row. ==> [Format Nominatif](https://docs.google.com/spreadsheets/d/1mtL9Te8LX9GDx-xLIi3VoqMKFwlYyjZo/edit?usp=sharing&ouid=104787015191488665272&rtpof=true&sd=true)
+        Silahkan unduh format nominatif berikut, pastikan untuk tidak mengganti nama Sheet dan menghapus Column dan Row. ==> [Format Nominatif](https://drive.google.com/drive/folders/1dAb_hMT04oq6pWGPMMoyiE3QxFffYqQ8)
         """
     )
     st.info(
