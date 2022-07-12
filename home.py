@@ -540,10 +540,10 @@ if selected == 'Kuitansi Kegiatan':
                         # )
                 
 
-                c = st.info("Download Amplop")
-                with c:
+                # c = st.info("")
+                # with c:
                             
-                    np_array = df2["nama"].to_numpy()
+                    # np_array = df2["nama"].to_numpy()
                     files3 = list("pages/AMPLOP/" + (np_array) + ".docx")
                     composed = f"pages/amplopgabung.docx"
                     result = Document(files3[0])
@@ -554,7 +554,7 @@ if selected == 'Kuitansi Kegiatan':
                         if i != len(files3) -1:
                             doc2.add_page_break()
                         composer.append(doc2)
-                    # composer.save(composed)
+                        composer.save(composed)
                     # with open(composed, "rb") as file:
                                 #st.success("🎉 Amplop telah selesai dibuat")
                         # st.download_button(
