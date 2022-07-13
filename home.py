@@ -173,7 +173,6 @@ kementerian negara/lembaga Tahun Anggaran 2022... [Selengkapnya](https://jdih.ke
         ""
     with col3:
         ""
-#st.markdown("***")
 if selected == "Kuitansi Monev":
     
 
@@ -293,8 +292,6 @@ if selected == "Kuitansi Monev":
             b = st.success("")
             with b:
                 np_array = df1["Nama"].to_numpy()
-                #st.write(np_array)
-
                 files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
                 composed = f"pages/gabung.docx"
                 result = Document(files2[0])
@@ -384,21 +381,11 @@ if selected == 'Kuitansi Translok':
                 "terbilang": num2words(int(nilai), lang='id').title() + " Rupiah",
                 "uang": currency
             }
-            #st.write(context)
             output_name = f'download/{context["nama"]}.docx'
             doc.render(context)   
             doc.save(output_name)
-            #convert(output_name, "hasil.pdf")
             with open(output_name, "rb") as file:
-            #    btn = st.download_button(
-            #           label="Download PDF",
-            #          data=file,
-            #         file_name="hasil.pdf",
-                #        mime="application/octet-stream"
-                #   )
                 st.success("🎉 File kuitansi telah selesai dibuat")
-                # st.write(html, unsafe_allow_html=True)
-                # st.write("")
                 st.download_button(
                     "⬇️ Download File",
                     data=file,
@@ -457,6 +444,8 @@ if selected == 'Kuitansi Kegiatan':
             try:
                 df2 = pd.read_excel(excelfile, sheet_name="kerja")
                 amplop = f"pages/templates/amplop.docx"
+                spd1 = f"pages/templates/spdkeg.docx"
+
                 for r_idx, r_val in df2.iterrows():
                     if (r_val['asal'] == 'Jakarta'):
                         doctemp = f"pages/templates/jakartakuitansikegiatan.docx"
@@ -472,6 +461,7 @@ if selected == 'Kuitansi Kegiatan':
                         doctemp = f"pages/templates/daerahkuitansikegiatan.docx"
                     amplop2 = DocxTemplate(amplop)
                     doc = DocxTemplate(doctemp)
+                    spd2 = DocxTemplate(spd1)
                     context = {
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
                         'output' : r_val['output'],
@@ -485,7 +475,6 @@ if selected == 'Kuitansi Kegiatan':
                         'tanggal_st' : kalender_indo(r_val['tanggal_st']),
                         'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
                         'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
-                        #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
                         'nama' : r_val['nama'],
                         'nip' : r_val['nip'],
                         'tiket' : rupiah_strip(r_val['tiket']),
@@ -502,22 +491,18 @@ if selected == 'Kuitansi Kegiatan':
                         'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
                         'mak' : r_val['mak'],                        
                         }
-                    #st.write(context)
                     doc.render(context)
                     output_path = f"pages/OUTPUT/{context['nama']}.docx"
                     doc.save(output_path)
                     amplop2.render(context)
                     amplop_path = f"pages/AMPLOP/{context['nama']}.docx"
                     amplop2.save(amplop_path)
-                    
-                #doc2 = DocxTemplate(f"pages/templates/spdterlampir.docx")
-                #doc2.render(df2[])
+                    spd2.render(context)
+                    spd2_path = f"pages/spd/spdkeg.docx"
+                    spd2.save(spd2_path)
                 a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
-                b = st.success("")
-                with b:
+                with a:
                     np_array = df2["nama"].to_numpy()
-                    #st.write(np_array)
-
                     files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
                     composed = f"pages/gabung.docx"
                     result = Document(files2[0])
@@ -529,21 +514,7 @@ if selected == 'Kuitansi Kegiatan':
                             doc2.add_page_break()
                         composer.append(doc2)
                     composer.save(composed)
-                    # with open(composed, "rb") as file:
-                    #     st.success("🎉 File kuitansi telah selesai dibuat")
-                        # st.download_button(
-                        #     label = "⬇️ Download Kuitansi",
-                        #     data=file,
-                        #     file_name="kuitansi.docx",
-                        #     mime="application/octet-stream",
-                        #     key="10000009"
-                        # )
-                
 
-                # c = st.info("")
-                # with c:
-                            
-                    # np_array = df2["nama"].to_numpy()
                     files3 = list("pages/AMPLOP/" + (np_array) + ".docx")
                     composed = f"pages/amplopgabung.docx"
                     result = Document(files3[0])
@@ -555,15 +526,19 @@ if selected == 'Kuitansi Kegiatan':
                             doc2.add_page_break()
                         composer.append(doc2)
                         composer.save(composed)
-                    # with open(composed, "rb") as file:
-                                #st.success("🎉 Amplop telah selesai dibuat")
-                        # st.download_button(
-                        #     label = "⬇️ Download Amplop",
-                        #     data=file,
-                        #     file_name="Amplop.docx",
-                        #     mime="application/octet-stream",
-                        #     key="10000010"
-                        # )
+
+                    files4 = "pages/spd/spdkeg.docx"
+                    composed = f"pages/spdkeg.docx"
+                    result = Document(files4)
+                    result.add_page_break()
+                    composer = Composer(result)
+                    for i in range(1, len(files4)):
+                        doc2 = Document(files4)
+                        if i != len(files4) -1:
+                            doc2.add_page_break()
+                        composer.append(doc2)
+                    composer.save(composed)
+
 
             except:
                 st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan ") 
@@ -576,6 +551,8 @@ if selected == 'Kuitansi Kegiatan':
         if submit:
             try:
                 df2 = pd.read_excel(excelfile, sheet_name="kerja")
+                amplop = f"pages/templates/amplop.docx"
+                spd = f"pages/templates/spdkegppk.docx"
                 for r_idx, r_val in df2.iterrows():
                     if (r_val['asal'] == 'Jakarta'):
                         doctemp = f"pages/templates/jakartakuitansikegiatanppk.docx"
@@ -590,6 +567,8 @@ if selected == 'Kuitansi Kegiatan':
                     else:
                         doctemp = f"pages/templates/daerahkuitansikegiatanppk.docx"
 
+                    amplop2 = DocxTemplate(amplop)
+                    spd2 = DocxTemplate(spd)
                     doc = DocxTemplate(doctemp)
                     context = {
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
@@ -604,7 +583,6 @@ if selected == 'Kuitansi Kegiatan':
                         'tanggal_st' : kalender_indo(r_val['tanggal_st']),
                         'asal_tujuan' : r_val['asal'] + "-" + r_val['lokasi'],
                         'terbilang' : num2words(int(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']), lang='id').title() + " Rupiah",
-                        #'terbilang' : rupiah_strip((r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari'])),
                         'nama' : r_val['nama'],
                         'nip' : r_val['nip'],
                         'tiket' : rupiah_strip(r_val['tiket']),
@@ -621,15 +599,18 @@ if selected == 'Kuitansi Kegiatan':
                         'total_spd' : rupiah_strip(r_val['dpr_jakarta'] + r_val['dpr_daerah']),
                         'mak' : r_val['mak'],                        
                         }
-                    #st.write(context)
+
                     doc.render(context)
                     output_path = f"pages/OUTPUT/{context['nama']}.docx"
                     doc.save(output_path)
-                #a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
-                # b = st.success("")
-                # with b:
+                    amplop2.render(context)
+                    amplop_path = f"pages/AMPLOP/{context['nama']}.docx"
+                    amplop2.save(amplop_path)
+                    spd2.render(context)
+                    spd_path = f"pages/spd/spdkeg.docx"
+                    spd2.save(spd_path)
+
                     np_array = df2["nama"].to_numpy()
-                    #st.write(np_array)
 
                     files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
                     composed = f"pages/gabung.docx"
@@ -642,21 +623,7 @@ if selected == 'Kuitansi Kegiatan':
                             doc2.add_page_break()
                         composer.append(doc2)
                     composer.save(composed)
-                    # with open(composed, "rb") as file:
-                    #     st.success("🎉 File kuitansi telah selesai dibuat")
-                        # st.download_button(
-                        #     label = "⬇️ Download File",
-                        #     data=file,
-                        #     file_name="kuitansi.docx",
-                        #     mime="application/octet-stream",
-                        #     key="10000009"
-                        # )
-                                
 
-                # c = st.info("")
-                # with c:
-                            
-                    # np_array = df2["nama"].to_numpy()
                     files3 = list("pages/AMPLOP/" + (np_array) + ".docx")
                     composed = f"pages/amplopgabung.docx"
                     result = Document(files3[0])
@@ -668,45 +635,49 @@ if selected == 'Kuitansi Kegiatan':
                             doc2.add_page_break()
                         composer.append(doc2)
                     composer.save(composed)
-                    # with open(composed, "rb") as file:
-                                #st.success("🎉 Amplop telah selesai dibuat")
-                        # st.download_button(
-                        #     label = "⬇️ Download Amplop",
-                        #     data=file,
-                        #     file_name="Amplop.docx",
-                        #     mime="application/octet-stream",
-                        #     key="10000010"
-                        # )
+
+                    files4 = "pages/spd/spdkeg.docx"
+                    composed = f"pages/spdkeg.docx"
+                    result = Document(files4)
+                    result.add_page_break()
+                    composer = Composer(result)
+                    for i in range(1, len(files4)):
+                        doc2 = Document(files4)
+                        if i != len(files4) -1:
+                            doc2.add_page_break()
+                        composer.append(doc2)
+                    composer.save(composed)
                 
             
             except:
                 st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan")
-kol1, kol2, kol3 = st.columns(3)
-with kol1:
-    with open("pages/amplopgabung.docx", "rb") as file:
-        btn = st.download_button(
-            label="⬇️ Download Amplop",
-            data=file,
-            file_name="amplop.docx",
-            mime="image/png"           
-        )
+    with st.expander("Lihat Hasil"):
+        kol1, kol2, kol3 = st.columns(3)
+        with kol1:
+            with open("pages/amplopgabung.docx", "rb") as file:
+                btn = st.download_button(
+                    label="⬇️ Download Amplop",
+                    data=file,
+                    file_name="amplop.docx",
+                    mime="image/png"           
+                )
 
-    with open("pages/gabung.docx", "rb") as file:
-        btn = st.download_button(
-        label="⬇️ Download Kuitansi",
-            data=file,
-            file_name="kuitansi.docx",
-            mime="image/png"
-        )
-    with open("pages/spdkeg.docx", "rb") as file:
-        btn = st.download_button(
-        label="⬇️ Download SPD",
-            data=file,
-            file_name="spd.docx",
-            mime="image/png"
-        )
+            with open("pages/gabung.docx", "rb") as file:
+                btn = st.download_button(
+                label="⬇️ Download Kuitansi",
+                    data=file,
+                    file_name="kuitansi.docx",
+                    mime="image/png"
+                )
+            with open("pages/spd/spdkeg.docx", "rb") as file:
+                btn = st.download_button(
+                label="⬇️ Download SPD",
+                    data=file,
+                    file_name="spd.docx",
+                    mime="image/png"
+                )
 
-                
+                    
 
        
                     
