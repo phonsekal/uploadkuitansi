@@ -464,7 +464,7 @@ if selected == 'Kuitansi Kegiatan':
                     doc = DocxTemplate(doctemp)
                     spd2 = DocxTemplate(spd1)
                     context = {
-                        'jeniskeg' : '\x1B' + jeniskeg + '\x1B',
+                        'jeniskeg' : '\x1B[3m' + jeniskeg + '\x1B[0m',
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
                         'output' : r_val['output'],
                         'sub_output' : r_val['sub_output'],
@@ -573,7 +573,7 @@ if selected == 'Kuitansi Kegiatan':
                     spd2 = DocxTemplate(spd)
                     doc = DocxTemplate(doctemp)
                     context = {
-                        'jeniskeg' : '\x1B' + jeniskeg + '\x1B',
+                        'jeniskeg' : '\x1B[3m' + jeniskeg + '\x1B[0m',
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
                         'output' : r_val['output'],
                         'sub_output' : r_val['sub_output'],
@@ -662,7 +662,7 @@ if selected == 'Kuitansi Kegiatan':
                     label="⬇️ Download Amplop",
                     data=file,
                     file_name="amplop.docx",
-                    mime="image/png"           
+                    mime="application/octet-stream"           
                 )
 
             with open("pages/gabung.docx", "rb") as file:
@@ -670,14 +670,14 @@ if selected == 'Kuitansi Kegiatan':
                 label="⬇️ Download Kuitansi",
                     data=file,
                     file_name="kuitansi.docx",
-                    mime="image/png"
+                    mime="application/octet-stream"
                 )
             with open("pages/spd/spdkeg.docx", "rb") as file:
                 btn = st.download_button(
                 label="⬇️ Download SPD",
                     data=file,
                     file_name="spd.docx",
-                    mime="image/png"
+                    mime="application/octet-stream"
                 )
 
                     
