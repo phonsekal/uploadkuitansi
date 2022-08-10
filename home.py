@@ -11,6 +11,8 @@ from streamlit_lottie import st_lottie
 import json
 import requests
 from streamlit_option_menu import option_menu
+import locale
+
 st.set_page_config(page_title='Bukan Web Personal || dedesaputra@2022', page_icon = ":coffee:", layout = 'centered', initial_sidebar_state = 'auto')
 @st.experimental_memo
 def kalender_indo(value):
@@ -315,85 +317,9 @@ if selected == "Kuitansi Monev":
                
         except:
             st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan")
-if selected == 'Kuitansi Translok':
-    
 
 
-    st.write("""
-    """)
-    col5, col4 = st.columns([3, 1])
-    with col5:
-        st.write(
-            """
-            # Format Kuitansi Transpor Lokal
-            """
-        )
-    with col4:
-        lottie_gambar = load_lottiefile("pages/templates/c.json")
-        st_lottie(
-            lottie_gambar,
-            speed=1,
-            reverse=False,
-            loop=True,
-            quality="low",
-            height="54%",
-            width="54%",
-        )
 
-    st.write("""
-        Selamat datang! :wave:
-        Untuk menggunakan aplikasi ini, silahkan isi form berikut. Pastikan kolom nominal hanya diisi menggunakan angka.
-        """
-    )
-    st.info(
-        """
-        ✏️ **NOTE:** Silahkan isi form di bawah ini!
-        """
-    )
-    form = st.form("template kuitansi")
-    with form:
-        col1, col2 = st.columns(2)
-        nama = col1.text_input('Nama')
-        nip = col2.text_input("NIP")
-        layanan = col1.text_input("Layanan")
-        mak = col2.text_input("MAK")
-        tanggal = col1.date_input("Tanggal Kegiatan")
-        kegiatan = col1.text_area("Nama Kegiatan")
-        lokasi = col2.text_input("Lokasi Kegiatan")
-        nilai = col2.text_input("Nominal")
-        submit = form.form_submit_button("Kirim")
-        tgl = tanggal.strftime("%d %B %Y")
-        tgl2 = tgl.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
-    if submit:
-        try:
-            thousands_separator = "."
-            fractional_separator = ","
-            currency = rupiah_strip(nilai)
-            doc = DocxTemplate("pages/templates/kuitansiperjadinapp.docx")
-            context = {
-                "nama": nama,
-                "nip": nip,
-                "mak": mak,
-                "kegiatan": kegiatan,
-                "lokasi": lokasi,
-                "tanggal": tgl2,
-                "layanan": layanan,
-                "terbilang": num2words(int(nilai), lang='id').title() + " Rupiah",
-                "uang": currency
-            }
-            output_name = f'download/{context["nama"]}.docx'
-            doc.render(context)   
-            doc.save(output_name)
-            with open(output_name, "rb") as file:
-                st.success("🎉 File kuitansi telah selesai dibuat")
-                st.download_button(
-                    "⬇️ Download File",
-                    data=file,
-                    file_name="Hasil.docx",
-                    mime="application/octet-stream",
-                )
-        except:
-            st.error("Silahkan isi form terlebih dahulu, kolom nominal hanya boleh diisi angka")
 
 if selected == 'Kuitansi Kegiatan':
 
@@ -681,6 +607,218 @@ if selected == 'Kuitansi Kegiatan':
                 )
 
                     
+if selected == 'Kuitansi Translok':
+    
+
+
+    st.write("""
+    """)
+    col5, col4 = st.columns([3, 1])
+    with col5:
+        st.write(
+            """
+            # Format Kuitansi Transpor Lokal
+            """
+        )
+    with col4:
+        lottie_gambar = load_lottiefile("pages/templates/c.json")
+        st_lottie(
+            lottie_gambar,
+            speed=1,
+            reverse=False,
+            loop=True,
+            quality="low",
+            height="54%",
+            width="54%",
+        )
+
+    st.write("""
+        Selamat datang! :wave:
+        Untuk menggunakan aplikasi ini, silahkan isi form berikut. Pastikan kolom nominal hanya diisi menggunakan angka.
+        """
+    )
+    st.info(
+        """
+        ✏️ **NOTE:** Silahkan isi form di bawah ini!
+        """
+    )
+    locale.setlocale(locale.LC_ALL, 'id_ID')
+    komp = '1O7dQMfdvQOo6WFlTT5AGbF0i2410_-0-WMs0rh70hqk'
+    ref = '148px-JIlh3MN8-MYM1pEJSuRBglqK4D-KAAn_-GOUwg'
+    translok = '1b7YpbyHLS5ldm6Zo5s-IOag6nLuV-22r1ia7gIqTjg8'
+    df_ref = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{ref}/export?format=csv", on_bad_lines='skip')
+    df_translok = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{translok}/export?format=csv", on_bad_lines='skip', converters={'NIP' : str})#, 'Unnamed: 8' : str, 'Jumlah diterima' : float})
+    df_komp = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{komp}/export?format=csv", on_bad_lines='skip')
+    df_translok['NIP'].replace([np.nan], 0, inplace=True)
+    form = st.form("Cetak Kuitansi Nomor:")
+    with form:
+        tujuan = st.radio("Tujuan",('Jakarta', 'Bogor', 'Bekasi', 'Tangerang', 'Depok'))
+        mulai = st.text_input('Mulai')
+        sampai = st.text_input("Sampai")
+        asal_tujuan = "Jakarta--" + tujuan + " "
+        submit = st.form_submit_button("Proses")
+        
+    if submit:
+
+        My_list = []
+        start, end = int(mulai), int(sampai)
+        if start < end:
+            My_list.extend(range(start, end))
+            My_list.append(end)
+        elif start == end:
+            My_list = [start]
+
+        df = pd.DataFrame(My_list)
+        df.columns = ['No']
+        print_kui = pd.merge(df, df_translok, on = "No", how="inner")
+        print_kui.columns = ['No', 'Nama', 'NIP', 'No ST', 'Tgl ST', 'Tgl Tugas', 'Akun', 'Kali', 'Transpor', 'Jumlah diterima', 'Keterangan', 'Jabatan']
+        print_kui["Output"] = print_kui["Akun"].str[:8]
+        print_kui["Sub Output"] = print_kui["Akun"].str[9:12]
+        print_kui["Belanja"] = print_kui["Akun"].str[-6:]
+        print_kui["Komponen"] = print_kui["Akun"].str[14:16]
+        print_kui["Sub Komponen"] = print_kui["Akun"].str[13:18]
+
+        df_ref.columns = ['Output', 'Output Ket']
+        print_kui = pd.merge(print_kui, df_ref, on = "Output", how="inner")
+        df_ref.columns = ['Sub Output', 'Sub Output Ket']
+        print_kui = pd.merge(print_kui, df_ref, on = "Sub Output", how="inner")
+        df_ref.columns = ['Belanja', 'Belanja Ket']
+        print_kui = pd.merge(print_kui, df_ref, on = "Belanja", how="inner")
+        df_komp.columns = ['Komponen', 'Komponen Ket']
+        print_kui = pd.merge(print_kui, df_komp, on = "Komponen", how="inner")
+        df_komp.columns = ['Sub Komponen', 'Sub Komponen Ket']
+        print_kui = pd.merge(print_kui, df_komp, on = "Sub Komponen", how="inner")
+        print_kui.replace([np.nan], " ", inplace=True)
+        print_kui['Transpor'] = print_kui['Transpor'].apply(lambda v: locale.atof(v.split()[-1]))
+        print_kui['Jumlah diterima'] = print_kui['Jumlah diterima'].apply(lambda v: locale.atof(v.split()[-1]))
+        jlh_harian = print_kui['Transpor'].sum()
+
+        jlh_uang = print_kui['Jumlah diterima'].sum()
+
+
+        daftarNominatif = []
+        for r_idx, r_val in print_kui.iterrows():
+                nama = r_val['Nama']
+                no_st = r_val['No ST']
+                tgl_st = r_val['Tgl ST']
+                tgl_tugas = r_val['Tgl Tugas']
+                kali = r_val['Kali']
+                harian = rupiah_strip(r_val['Transpor'])
+                uang = rupiah_strip(r_val['Jumlah diterima'])
+                daftarNominatif.append({"no": str(r_idx+1) , "nama" : nama, "no_st" : no_st, "tgl_st" : tgl_st, "tgl_tugas" : tgl_tugas, "kali" : kali, "harian" : harian, "uang": uang})   
+        
+        for r_idx, r_val in print_kui.iterrows():
+            if (r_val['Belanja'] == '524113'):
+                doctemp = f"pages/templates/524113.docx"
+            elif (r_val['Belanja'] == '524111'):
+                doctemp = f"pages/templates/524111.docx"
+            else:
+                doctemp = f"pages/templates/524111.docx"
+            amplop = f"pages/templates/amplop524113.docx"
+            amplop2 = DocxTemplate(amplop)
+            doc = DocxTemplate(doctemp)
+            nominatif = f"pages/templates/nominatif.docx"
+            nominatif2 = DocxTemplate(nominatif)
+            context = {
+                'jabatan' : r_val['Jabatan'],
+                'nomor_st' : r_val['No ST'],
+                'tanggal_st' : r_val['Tgl ST'],
+                'asal_tujuan' : asal_tujuan,
+                'tujuan' : tujuan,
+                'jlh_harian' : rupiah_strip(jlh_harian),
+                'jlh_uang' : rupiah_strip(jlh_uang),
+                'daftarNominatif' : daftarNominatif,
+                'mak' : r_val['Akun'],
+                'uang' : rupiah_strip(r_val['Jumlah diterima']),
+                'terbilang' : num2words(int(r_val['Jumlah diterima']), lang='id').title() + " Rupiah",
+                'output' : r_val['Output Ket'],
+                'sub_output' : r_val['Sub Output Ket'],
+                'sub_komponen' : r_val['Sub Komponen Ket'],
+                'sub_komponen2' : r_val['Sub Komponen Ket'].upper(),
+                'ket' : r_val['Keterangan'],
+                'tanggal_keg' : r_val['Tgl Tugas'],
+                'akun' : r_val['Belanja Ket'],
+                'akun2' :r_val['Belanja Ket'].upper(),
+                'komponen' : r_val['Komponen Ket'],
+                'kali' : r_val['Kali'],
+                'transpor' : rupiah_strip(r_val['Transpor']),
+                'nama' : r_val['Nama'],
+                'nip' : str(r_val['NIP']),                       
+                }
+            doc.render(context)
+            output_path = f"pages/OUTPUT/{context['nama']}.docx"
+            doc.save(output_path)
+            amplop2.render(context)
+            amplop_path = f"pages/AMPLOP/{context['nama']}.docx"
+            amplop2.save(amplop_path)
+            nominatif2.render(context)
+            nominatif_path = f"pages/nominatif.docx"
+            nominatif2.save(nominatif_path)
+        a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
+        with a:
+            if len(print_kui) == 1:
+                np_array = print_kui["Nama"].to_numpy()
+                namama = np_array[0]
+                composed = f"pages/gabung.docx"
+                result = Document("pages/OUTPUT/" + namama + ".docx")
+                composer = Composer(result)
+                composer.save(composed)
+                composed = f"pages/amplopgabung.docx"
+                result = Document("pages/AMPLOP/" + namama + ".docx")
+                composer = Composer(result)
+                composer.save(composed)
+
+            else:
+                np_array = print_kui["Nama"].to_numpy()
+                files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
+                composed = f"pages/gabung.docx"
+                result = Document(files2[0])
+                result.add_page_break()
+                composer = Composer(result)
+                for i in range(1, len(files2)):
+                    doc2 = Document(files2[i])
+                    if i != len(files2) -1:
+                        doc2.add_page_break()
+                    composer.append(doc2)
+                    composer.save(composed)
+                files3 = list("pages/AMPLOP/" + (np_array) + ".docx")
+                composed = f"pages/amplopgabung.docx"
+                result = Document(files3[0])
+                result.add_page_break()
+                composer = Composer(result)
+                for i in range(1, len(files3)):
+                    doc2 = Document(files3[i])
+                    if i != len(files3) -1:
+                        doc2.add_page_break()
+                    composer.append(doc2)
+                    composer.save(composed)
+
+    with st.expander("Download Hasil"):
+            kol1, kol2, kol3 = st.columns(3)
+            with kol1:
+                with open("pages/amplopgabung.docx", "rb") as file:
+                    btn = st.download_button(
+                        label="⬇️ Download Amplop",
+                        data=file,
+                        file_name="amplop.docx",
+                        mime="image/png"           
+                    )
+
+                with open("pages/gabung.docx", "rb") as file:
+                    btn = st.download_button(
+                    label="⬇️ Download Kuitansi",
+                        data=file,
+                        file_name="kuitansi.docx",
+                        mime="image/png"
+                    )
+                with open("pages/nominatif.docx", "rb") as file:
+                    btn = st.download_button(
+                    label="⬇️ Download Nominatif",
+                        data=file,
+                        file_name="nominatif.docx",
+                        mime="image/png"
+                    )
+
 
        
                     
