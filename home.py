@@ -642,7 +642,7 @@ if selected == 'Kuitansi Translok':
         ✏️ **NOTE:** Silahkan isi form di bawah ini!
         """
     )
-    locale.setlocale(locale.LC_ALL, 'id_ID.utf8')
+    locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
     komp = '1O7dQMfdvQOo6WFlTT5AGbF0i2410_-0-WMs0rh70hqk'
     ref = '148px-JIlh3MN8-MYM1pEJSuRBglqK4D-KAAn_-GOUwg'
     translok = '1b7YpbyHLS5ldm6Zo5s-IOag6nLuV-22r1ia7gIqTjg8'
