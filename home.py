@@ -834,7 +834,7 @@ if selected == 'Kuitansi Translok':
                 'sub_komponen' : r_val['Sub Komponen Ket'],
                 'sub_komponen2' : r_val['Sub Komponen Ket'].upper(),
                 'ket' : r_val['Keterangan'],
-                'tanggal_keg' : kalender_indo(r_val['Tgl Tugas']),
+                'tanggal_keg' : r_val['Tgl Tugas'],
                 'akun' : r_val['Belanja Ket'],
                 'akun2' :r_val['Belanja Ket'].upper(),
                 'komponen' : r_val['Komponen Ket'],
