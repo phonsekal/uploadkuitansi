@@ -12,9 +12,84 @@ import json
 import requests
 from streamlit_option_menu import option_menu
 import locale
-
+import re
 st.set_page_config(page_title='Bukan Web Personal || dedesaputra@2022', page_icon = ":coffee:", layout = 'centered', initial_sidebar_state = 'auto')
 @st.experimental_memo
+
+def lebihhari(string1):
+    if "-" in string1:
+        c = re.findall(r'\d+', string1)
+        m = c[0]
+        s = c[1]
+        if s > m:
+            return int(s) - int(m) + 1
+        else:
+            bulan = re.findall(r'\w+', string1)
+            bulan1 = bulan[1]
+            bulan2 = bulan[3]
+            list = ['Januari', 'Maret', 'Mei', 'Juli', 'Agustus', 'Oktober', 'Desember']
+            if bulan1 in list:
+                return  31 - int(m) + int(s)        
+            elif bulan1 == "Februari":
+                if int(bulan[4]) % 4 == 0:
+                    return  29 - int(m) + int(s)
+                else:
+                    return  28 - int(m) + int(s)
+
+            else:
+                return  30 - int(m) + int(s)
+    else:
+        c = re.findall(r'\d+', string1)
+        m = c[0]
+        s = c[0]
+        return 1
+
+def bedahariawal(string1):
+    if "-" in string1:
+        c = re.findall(r'\d+', string1)
+        bulan = re.findall(r'\D+', string1)
+        m = c[0]
+        s = c[1]
+        tahun = re.findall(r'\w+', string1)
+
+        if s > m:
+            return  str(m) + " " + bulan[1] + " " + tahun[3]
+            
+        else:
+            bulan = re.findall(r'\w+', string1)
+            c = re.findall(r'\d+', string1)
+            m = c[0]
+            s = c[1]
+            bulan1 = bulan[1]
+            bulan2 = bulan[3]
+            return m + " " + bulan1 + " " + bulan[4]
+    else:
+        return string1
+def bedahariakhir(string1):
+    if "-" in string1:
+        c = re.findall(r'\d+', string1)
+        bulan = re.findall(r'\D+', string1)
+        m = c[0]
+        s = c[1]
+        tahun = re.findall(r'\w+', string1)
+
+        if s > m:
+            return  str(s) + " " + bulan[1] + " " + tahun[3]
+            
+        else:
+            bulan = re.findall(r'\w+', string1)
+            c = re.findall(r'\d+', string1)
+            m = c[0]
+            s = c[1]
+            bulan1 = bulan[1]
+            bulan2 = bulan[3]
+            tahun = bulan [4]
+            return s + " " + bulan2 + " " + tahun
+    else:
+        return string1
+
+
+
 def kalender_indo(value):
     a = (value).strftime("%d %B %Y")
     kal = a.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
@@ -643,13 +718,22 @@ if selected == 'Kuitansi Translok':
         """
     )
     locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
+            
     komp = '1O7dQMfdvQOo6WFlTT5AGbF0i2410_-0-WMs0rh70hqk'
     ref = '148px-JIlh3MN8-MYM1pEJSuRBglqK4D-KAAn_-GOUwg'
     translok = '1b7YpbyHLS5ldm6Zo5s-IOag6nLuV-22r1ia7gIqTjg8'
     df_ref = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{ref}/export?format=csv", on_bad_lines='skip')
     df_translok = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{translok}/export?format=csv", on_bad_lines='skip', converters={'NIP' : str})#, 'Unnamed: 8' : str, 'Jumlah diterima' : float})
     df_komp = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{komp}/export?format=csv", on_bad_lines='skip')
+    # your_df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{translok}/export?format=csv",sep=';',decimal=',')
+    # st.write(your_df)
+    #df_translok['Jumlah diterima ID'] = df_translok['Jumlah diterima'].apply(lambda v: locale.atof(v.split()[-1]))
     df_translok['NIP'].replace([np.nan], 0, inplace=True)
+    # st.write(df_translok)
+    # st.write(df_translok['Jumlah diterima'].sum())
+
+    st.title("Transportasi Lokal")
+    st.write('***Cetak Kuitansi Nomor:***')
     form = st.form("Cetak Kuitansi Nomor:")
     with form:
         tujuan = st.radio("Tujuan",('Jakarta', 'Bogor', 'Bekasi', 'Tangerang', 'Depok'))
@@ -663,13 +747,17 @@ if selected == 'Kuitansi Translok':
         My_list = []
         start, end = int(mulai), int(sampai)
         if start < end:
+            # unpack the result
             My_list.extend(range(start, end))
+            # Append the last value
             My_list.append(end)
         elif start == end:
             My_list = [start]
 
         df = pd.DataFrame(My_list)
+        #st.write(df)
         df.columns = ['No']
+        # df['No'].astype(float)
         print_kui = pd.merge(df, df_translok, on = "No", how="inner")
         print_kui.columns = ['No', 'Nama', 'NIP', 'No ST', 'Tgl ST', 'Tgl Tugas', 'Akun', 'Kali', 'Transpor', 'Jumlah diterima', 'Keterangan', 'Jabatan']
         print_kui["Output"] = print_kui["Akun"].str[:8]
@@ -688,9 +776,16 @@ if selected == 'Kuitansi Translok':
         print_kui = pd.merge(print_kui, df_komp, on = "Komponen", how="inner")
         df_komp.columns = ['Sub Komponen', 'Sub Komponen Ket']
         print_kui = pd.merge(print_kui, df_komp, on = "Sub Komponen", how="inner")
+        #print_kui['Jumlah diterima'].astype(float)
         print_kui.replace([np.nan], " ", inplace=True)
+        # print_kui2 = print_kui
+        # print_kui2.replace('.', " ", inplace=True)
+        # # arr = print_kui2["Transpor"].tolist()
+        # # print_kui2['Transpor'] = print_kui2['Transpor'].replace('.0', '0', regex=True)
         print_kui['Transpor'] = print_kui['Transpor'].apply(lambda v: locale.atof(v.split()[-1]))
         print_kui['Jumlah diterima'] = print_kui['Jumlah diterima'].apply(lambda v: locale.atof(v.split()[-1]))
+
+        st.write(print_kui)
         jlh_harian = print_kui['Transpor'].sum()
 
         jlh_uang = print_kui['Jumlah diterima'].sum()
@@ -720,6 +815,9 @@ if selected == 'Kuitansi Translok':
             nominatif = f"pages/templates/nominatif.docx"
             nominatif2 = DocxTemplate(nominatif)
             context = {
+                'hari' : str(lebihhari(r_val['Tgl Tugas'])) + " hari",
+                'tanggal_mulai' : bedahariawal(r_val['Tgl Tugas']),
+                'tanggal_selesai': bedahariakhir(r_val['Tgl Tugas']),
                 'jabatan' : r_val['Jabatan'],
                 'nomor_st' : r_val['No ST'],
                 'tanggal_st' : r_val['Tgl ST'],
@@ -736,7 +834,7 @@ if selected == 'Kuitansi Translok':
                 'sub_komponen' : r_val['Sub Komponen Ket'],
                 'sub_komponen2' : r_val['Sub Komponen Ket'].upper(),
                 'ket' : r_val['Keterangan'],
-                'tanggal_keg' : r_val['Tgl Tugas'],
+                'tanggal_keg' : kalender_indo(r_val['Tgl Tugas']),
                 'akun' : r_val['Belanja Ket'],
                 'akun2' :r_val['Belanja Ket'].upper(),
                 'komponen' : r_val['Komponen Ket'],
@@ -767,7 +865,13 @@ if selected == 'Kuitansi Translok':
                 result = Document("pages/AMPLOP/" + namama + ".docx")
                 composer = Composer(result)
                 composer.save(composed)
-
+                # with open("pages/OUTPUT/" + namama + ".docx", "rb") as file:
+                # 		btn = st.download_button(
+                # 			label="⬇️ Download Kuitansi",
+                # 			data=file,
+                # 			file_name="Kuitansi.docx",
+                # 			mime="image/png"           
+                # 		)
             else:
                 np_array = print_kui["Nama"].to_numpy()
                 files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
@@ -792,6 +896,28 @@ if selected == 'Kuitansi Translok':
                         doc2.add_page_break()
                     composer.append(doc2)
                     composer.save(composed)
+
+        
+        # namama = np_array[0]
+
+        # with st.expander("Lihat Hasil 1 Orang"):
+        # 		kol1, kol2, kol3 = st.columns(3)
+        # 		with kol1:
+        # 			with open("pages/OUTPUT/" + namama + ".docx", "rb") as file:
+        # 				btn = st.download_button(
+        # 					label="⬇️ Download Kuitansi",
+        # 					data=file,
+        # 					file_name="Kuitansi.docx",
+        # 					mime="image/png"           
+        # 				)
+
+        # 			with open("pages/AMPLOP/" + namama + ".docx", "rb") as file:
+        # 				btn = st.download_button(
+        # 				label="⬇️ Download Amplop",
+        # 					data=file,
+        # 					file_name="Amplop.docx",
+        # 					mime="image/png"
+        # 				)
 
     with st.expander("Download Hasil"):
             kol1, kol2, kol3 = st.columns(3)
@@ -818,7 +944,5 @@ if selected == 'Kuitansi Translok':
                         file_name="nominatif.docx",
                         mime="image/png"
                     )
-
-
        
                     
