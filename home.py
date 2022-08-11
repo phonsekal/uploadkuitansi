@@ -725,12 +725,8 @@ if selected == 'Kuitansi Translok':
     df_ref = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{ref}/export?format=csv", on_bad_lines='skip')
     df_translok = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{translok}/export?format=csv", on_bad_lines='skip', converters={'NIP' : str})#, 'Unnamed: 8' : str, 'Jumlah diterima' : float})
     df_komp = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{komp}/export?format=csv", on_bad_lines='skip')
-    # your_df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{translok}/export?format=csv",sep=';',decimal=',')
-    # st.write(your_df)
-    #df_translok['Jumlah diterima ID'] = df_translok['Jumlah diterima'].apply(lambda v: locale.atof(v.split()[-1]))
     df_translok['NIP'].replace([np.nan], 0, inplace=True)
-    # st.write(df_translok)
-    # st.write(df_translok['Jumlah diterima'].sum())
+
 
     st.title("Transportasi Lokal")
     st.write('***Cetak Kuitansi Nomor:***')
@@ -747,17 +743,15 @@ if selected == 'Kuitansi Translok':
         My_list = []
         start, end = int(mulai), int(sampai)
         if start < end:
-            # unpack the result
             My_list.extend(range(start, end))
-            # Append the last value
             My_list.append(end)
         elif start == end:
             My_list = [start]
 
         df = pd.DataFrame(My_list)
-        #st.write(df)
+
         df.columns = ['No']
-        # df['No'].astype(float)
+
         print_kui = pd.merge(df, df_translok, on = "No", how="inner")
         print_kui.columns = ['No', 'Nama', 'NIP', 'No ST', 'Tgl ST', 'Tgl Tugas', 'Akun', 'Kali', 'Transpor', 'Jumlah diterima', 'Keterangan', 'Jabatan']
         print_kui["Output"] = print_kui["Akun"].str[:8]
@@ -776,16 +770,10 @@ if selected == 'Kuitansi Translok':
         print_kui = pd.merge(print_kui, df_komp, on = "Komponen", how="inner")
         df_komp.columns = ['Sub Komponen', 'Sub Komponen Ket']
         print_kui = pd.merge(print_kui, df_komp, on = "Sub Komponen", how="inner")
-        #print_kui['Jumlah diterima'].astype(float)
         print_kui.replace([np.nan], " ", inplace=True)
-        # print_kui2 = print_kui
-        # print_kui2.replace('.', " ", inplace=True)
-        # # arr = print_kui2["Transpor"].tolist()
-        # # print_kui2['Transpor'] = print_kui2['Transpor'].replace('.0', '0', regex=True)
         print_kui['Transpor'] = print_kui['Transpor'].apply(lambda v: locale.atof(v.split()[-1]))
         print_kui['Jumlah diterima'] = print_kui['Jumlah diterima'].apply(lambda v: locale.atof(v.split()[-1]))
 
-        st.write(print_kui)
         jlh_harian = print_kui['Transpor'].sum()
 
         jlh_uang = print_kui['Jumlah diterima'].sum()
@@ -865,13 +853,6 @@ if selected == 'Kuitansi Translok':
                 result = Document("pages/AMPLOP/" + namama + ".docx")
                 composer = Composer(result)
                 composer.save(composed)
-                # with open("pages/OUTPUT/" + namama + ".docx", "rb") as file:
-                # 		btn = st.download_button(
-                # 			label="⬇️ Download Kuitansi",
-                # 			data=file,
-                # 			file_name="Kuitansi.docx",
-                # 			mime="image/png"           
-                # 		)
             else:
                 np_array = print_kui["Nama"].to_numpy()
                 files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
@@ -896,28 +877,6 @@ if selected == 'Kuitansi Translok':
                         doc2.add_page_break()
                     composer.append(doc2)
                     composer.save(composed)
-
-        
-        # namama = np_array[0]
-
-        # with st.expander("Lihat Hasil 1 Orang"):
-        # 		kol1, kol2, kol3 = st.columns(3)
-        # 		with kol1:
-        # 			with open("pages/OUTPUT/" + namama + ".docx", "rb") as file:
-        # 				btn = st.download_button(
-        # 					label="⬇️ Download Kuitansi",
-        # 					data=file,
-        # 					file_name="Kuitansi.docx",
-        # 					mime="image/png"           
-        # 				)
-
-        # 			with open("pages/AMPLOP/" + namama + ".docx", "rb") as file:
-        # 				btn = st.download_button(
-        # 				label="⬇️ Download Amplop",
-        # 					data=file,
-        # 					file_name="Amplop.docx",
-        # 					mime="image/png"
-        # 				)
 
     with st.expander("Download Hasil"):
             kol1, kol2, kol3 = st.columns(3)
