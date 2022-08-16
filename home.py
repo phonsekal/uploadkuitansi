@@ -11,85 +11,8 @@ from streamlit_lottie import st_lottie
 import json
 import requests
 from streamlit_option_menu import option_menu
-import locale
-import re
 st.set_page_config(page_title='Bukan Web Personal || dedesaputra@2022', page_icon = ":coffee:", layout = 'centered', initial_sidebar_state = 'auto')
 @st.experimental_memo
-
-def lebihhari(string1):
-    if "-" in string1:
-        c = re.findall(r'\d+', string1)
-        m = c[0]
-        s = c[1]
-        if s > m:
-            return int(s) - int(m) + 1
-        else:
-            bulan = re.findall(r'\w+', string1)
-            bulan1 = bulan[1]
-            bulan2 = bulan[3]
-            list = ['Januari', 'Maret', 'Mei', 'Juli', 'Agustus', 'Oktober', 'Desember']
-            if bulan1 in list:
-                return  31 - int(m) + int(s)        
-            elif bulan1 == "Februari":
-                if int(bulan[4]) % 4 == 0:
-                    return  29 - int(m) + int(s)
-                else:
-                    return  28 - int(m) + int(s)
-
-            else:
-                return  30 - int(m) + int(s)
-    else:
-        c = re.findall(r'\d+', string1)
-        m = c[0]
-        s = c[0]
-        return 1
-
-def bedahariawal(string1):
-    if "-" in string1:
-        c = re.findall(r'\d+', string1)
-        bulan = re.findall(r'\D+', string1)
-        m = c[0]
-        s = c[1]
-        tahun = re.findall(r'\w+', string1)
-
-        if s > m:
-            return  str(m) + " " + bulan[1] + " " + tahun[3]
-            
-        else:
-            bulan = re.findall(r'\w+', string1)
-            c = re.findall(r'\d+', string1)
-            m = c[0]
-            s = c[1]
-            bulan1 = bulan[1]
-            bulan2 = bulan[3]
-            return m + " " + bulan1 + " " + bulan[4]
-    else:
-        return string1
-def bedahariakhir(string1):
-    if "-" in string1:
-        c = re.findall(r'\d+', string1)
-        bulan = re.findall(r'\D+', string1)
-        m = c[0]
-        s = c[1]
-        tahun = re.findall(r'\w+', string1)
-
-        if s > m:
-            return  str(s) + " " + bulan[1] + " " + tahun[3]
-            
-        else:
-            bulan = re.findall(r'\w+', string1)
-            c = re.findall(r'\d+', string1)
-            m = c[0]
-            s = c[1]
-            bulan1 = bulan[1]
-            bulan2 = bulan[3]
-            tahun = bulan [4]
-            return s + " " + bulan2 + " " + tahun
-    else:
-        return string1
-
-
-
 def kalender_indo(value):
     a = (value).strftime("%d %B %Y")
     kal = a.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
@@ -392,9 +315,85 @@ if selected == "Kuitansi Monev":
                
         except:
             st.error("Silahkan upload nominatif terlebih dahulu/gunakan format nominatif yang telah digunakan")
+if selected == 'Kuitansi Translok':
+    
 
 
+    st.write("""
+    """)
+    col5, col4 = st.columns([3, 1])
+    with col5:
+        st.write(
+            """
+            # Format Kuitansi Transpor Lokal
+            """
+        )
+    with col4:
+        lottie_gambar = load_lottiefile("pages/templates/c.json")
+        st_lottie(
+            lottie_gambar,
+            speed=1,
+            reverse=False,
+            loop=True,
+            quality="low",
+            height="54%",
+            width="54%",
+        )
 
+    st.write("""
+        Selamat datang! :wave:
+        Untuk menggunakan aplikasi ini, silahkan isi form berikut. Pastikan kolom nominal hanya diisi menggunakan angka.
+        """
+    )
+    st.info(
+        """
+        ✏️ **NOTE:** Silahkan isi form di bawah ini!
+        """
+    )
+    form = st.form("template kuitansi")
+    with form:
+        col1, col2 = st.columns(2)
+        nama = col1.text_input('Nama')
+        nip = col2.text_input("NIP")
+        layanan = col1.text_input("Layanan")
+        mak = col2.text_input("MAK")
+        tanggal = col1.date_input("Tanggal Kegiatan")
+        kegiatan = col1.text_area("Nama Kegiatan")
+        lokasi = col2.text_input("Lokasi Kegiatan")
+        nilai = col2.text_input("Nominal")
+        submit = form.form_submit_button("Kirim")
+        tgl = tanggal.strftime("%d %B %Y")
+        tgl2 = tgl.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
+    if submit:
+        try:
+            thousands_separator = "."
+            fractional_separator = ","
+            currency = rupiah_strip(nilai)
+            doc = DocxTemplate("pages/templates/kuitansiperjadinapp.docx")
+            context = {
+                "nama": nama,
+                "nip": nip,
+                "mak": mak,
+                "kegiatan": kegiatan,
+                "lokasi": lokasi,
+                "tanggal": tgl2,
+                "layanan": layanan,
+                "terbilang": num2words(int(nilai), lang='id').title() + " Rupiah",
+                "uang": currency
+            }
+            output_name = f'download/{context["nama"]}.docx'
+            doc.render(context)   
+            doc.save(output_name)
+            with open(output_name, "rb") as file:
+                st.success("🎉 File kuitansi telah selesai dibuat")
+                st.download_button(
+                    "⬇️ Download File",
+                    data=file,
+                    file_name="Hasil.docx",
+                    mime="application/octet-stream",
+                )
+        except:
+            st.error("Silahkan isi form terlebih dahulu, kolom nominal hanya boleh diisi angka")
 
 if selected == 'Kuitansi Kegiatan':
 
@@ -432,7 +431,6 @@ if selected == 'Kuitansi Kegiatan':
         ✏️ **NOTE:** Silahkan pilih PPK terlebih dahulu!
         """
     )
-    jeniskeg = st.radio('Pilih Jenis Kegiatan',('Fullboard', 'Fullday'))
     ppk = st.selectbox(
     '',
      ('PPK 01 (Akik Takjudin)', 'PPK 02 (Syihabudin)')
@@ -465,7 +463,6 @@ if selected == 'Kuitansi Kegiatan':
                     doc = DocxTemplate(doctemp)
                     spd2 = DocxTemplate(spd1)
                     context = {
-                        'jeniskeg' : '\x1B' + jeniskeg + '\x1B',
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
                         'output' : r_val['output'],
                         'sub_output' : r_val['sub_output'],
@@ -574,7 +571,6 @@ if selected == 'Kuitansi Kegiatan':
                     spd2 = DocxTemplate(spd)
                     doc = DocxTemplate(doctemp)
                     context = {
-                        'jeniskeg' : '\x1B' + jeniskeg + '\x1B',
                         'total' : rupiah_strip(r_val['tiket'] + r_val['taksi_jakarta'] + r_val['taksi_daerah'] + r_val['total_hari']),
                         'output' : r_val['output'],
                         'sub_output' : r_val['sub_output'],
@@ -682,30 +678,7 @@ if selected == 'Kuitansi Kegiatan':
                 )
 
                     
-if selected == 'Kuitansi Translok':
-    
 
-
-    st.write("""
-    """)
-    col5, col4 = st.columns([3, 1])
-    with col5:
-        st.write(
-            """
-            # Format Kuitansi Transpor Lokal
-            """
-        )
-    with col4:
-        lottie_gambar = load_lottiefile("pages/templates/c.json")
-        st_lottie(
-            lottie_gambar,
-            speed=1,
-            reverse=False,
-            loop=True,
-            quality="low",
-            height="54%",
-            width="54%",
-        )
 
     st.write("""
         Selamat datang! :wave:
@@ -829,21 +802,32 @@ if selected == 'Kuitansi Translok':
                 'kali' : r_val['Kali'],
                 'transpor' : rupiah_strip(r_val['Transpor']),
                 'nama' : r_val['Nama'],
-                'nip' : str(r_val['NIP']),                       
+                'nip' : str(r_val['NIP']), 
+                'no' : r_val['No']                      
                 }
             doc.render(context)
-            output_path = f"pages/OUTPUT/{context['nama']}.docx"
+            output_path = f"pages/OUTPUT/{context['no']}.docx"
             doc.save(output_path)
             amplop2.render(context)
-            amplop_path = f"pages/AMPLOP/{context['nama']}.docx"
+            amplop_path = f"pages/AMPLOP/{context['no']}.docx"
             amplop2.save(amplop_path)
             nominatif2.render(context)
             nominatif_path = f"pages/nominatif.docx"
             nominatif2.save(nominatif_path)
+            np_array = print_kui["No"].to_numpy()
+            np_array = pd.DataFrame(np_array, columns = ['A'])
+            np_array['A'] = np_array['A'].astype(str)
+            np_array = np_array["A"].to_numpy()
+            files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
+
+
         a = st.success("🎉 File kuitansi telah selesai dibuat, silahkan unduh")
         with a:
             if len(print_kui) == 1:
-                np_array = print_kui["Nama"].to_numpy()
+                np_array = print_kui["No"].to_numpy()
+                np_array = pd.DataFrame(np_array, columns = ['A'])
+                np_array['A'] = np_array['A'].astype(str)
+                np_array = np_array["A"].to_numpy()
                 namama = np_array[0]
                 composed = f"pages/gabung.docx"
                 result = Document("pages/OUTPUT/" + namama + ".docx")
@@ -854,7 +838,10 @@ if selected == 'Kuitansi Translok':
                 composer = Composer(result)
                 composer.save(composed)
             else:
-                np_array = print_kui["Nama"].to_numpy()
+                np_array = print_kui["No"].to_numpy()
+                np_array = pd.DataFrame(np_array, columns = ['A'])
+                np_array['A'] = np_array['A'].astype(str)
+                np_array = np_array["A"].to_numpy()
                 files2 = list("pages/OUTPUT/" + (np_array) + ".docx")
                 composed = f"pages/gabung.docx"
                 result = Document(files2[0])
@@ -903,5 +890,3 @@ if selected == 'Kuitansi Translok':
                         file_name="nominatif.docx",
                         mime="image/png"
                     )
-       
-                    
