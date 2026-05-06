@@ -12,7 +12,8 @@ import json
 import requests
 from streamlit_option_menu import option_menu
 st.set_page_config(page_title='Bukan Web Personal || dedesaputra@2022', page_icon = ":coffee:", layout = 'centered', initial_sidebar_state = 'auto')
-@st.experimental_memo
+#@st.experimental_memo
+@st.cache_data
 def kalender_indo(value):
     a = (value).strftime("%d %B %Y")
     kal = a.replace("January", "Januari").replace("February", "Februari").replace("March", "Maret").replace("May", "Mei").replace("June", "Juni").replace("July", "Juli").replace("August", "Agustus").replace("October", "Oktober").replace("December", "Desember")
