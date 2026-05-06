@@ -1,4 +1,5 @@
 streamlit>=1.30.0
+setuptools
 DateTime==4.4
 docxcompose==1.3.4
 docxtpl==0.16.0
